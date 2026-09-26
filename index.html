@@ -58,9 +58,12 @@
         '<div class="trust"><span>✔ Gratuito</span><span>✔ Sem cadastro</span></div>' +
       '</div>'; }, onEnter:function(){ fbq('trackCustom','QuizStart'); } },
 
-    { id:"nome", q:true, render:function(){ return '' +
-      '<h2>Qual é o nome do seu cachorro?</h2><p class="sub">Vamos usar o nome para personalizar o resultado.</p>' +
-      '<input class="input" id="inNome" maxlength="24" placeholder="Ex.: Thor, Mel, Pipoca..." autocomplete="off" value="'+esc(A.nome||"")+'">' +
+    single("sexo", function(){ return "Seu cachorro é macho ou fêmea?"; }, "", [
+      ["m","♂️","Macho"],["f","♀️","Fêmea"] ], true),
+
+    { id:"nome", q:true, render:function(){ var f = A.sexo === "f"; return '' +
+      '<h2>' + (f ? 'Qual é o nome da sua cachorra?' : 'Qual é o nome do seu cachorro?') + '</h2><p class="sub">Vamos usar o nome para personalizar o resultado.</p>' +
+      '<input class="input" id="inNome" maxlength="24" placeholder="' + (f ? 'Ex.: Mel, Luna, Amora...' : 'Ex.: Thor, Bob, Pipoca...') + '" autocomplete="off" value="'+esc(A.nome||"")+'">' +
       '<button class="btn block next" id="okNome" '+(A.nome?'':'disabled')+'>CONTINUAR →</button>'; },
       bind:function(){
         var i=$("#inNome"), b=$("#okNome");
@@ -69,9 +72,6 @@
         i.addEventListener("keydown",function(e){ if(e.key==="Enter" && i.value.trim()){ b.click(); }});
         b.addEventListener("click",function(){ A.nome = i.value.trim().slice(0,24); go(1); });
       } },
-
-    single("sexo", function(){ return "{N} é macho ou fêmea?"; }, "", [
-      ["m","♂️","Macho"],["f","♀️","Fêmea"] ], true),
 
     single("idade", function(){ return "Qual a idade {do} {N}?"; }, "", [
       ["filhote","🐾","Filhote (até 6 meses)"],["jovem","🐕","Jovem (6 meses a 2 anos)"],
