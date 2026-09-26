@@ -13,7 +13,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,800&family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css?v=3">
-<script src="config.js?v=4"></script>
+<script src="config.js?v=5"></script>
 </head>
 <body>
 
@@ -250,7 +250,7 @@
     <p>Cão Educado em 21 Dias · Todos os direitos reservados</p>
     <p>Este produto tem caráter educativo e não substitui a avaliação de um médico-veterinário ou de um profissional de comportamento animal. Os resultados variam de acordo com cada cão e com a aplicação do método.</p>
     <p>Este site não é afiliado ao Facebook, Instagram ou Meta Platforms, Inc.</p>
-    <p><a href="privacidade.html">Política de Privacidade</a> · <a href="termos.html">Termos de Uso</a> · Suporte: <a data-email href="#"></a></p>
+    <p><a href="privacidade.html">Política de Privacidade</a> · <a href="termos.html">Termos de Uso</a><span data-email-wrap> · Suporte: <a data-email href="#"></a></span></p>
   </div>
 </footer>
 
@@ -287,7 +287,7 @@
   // Configurações
   each("[data-preco]", function(e){ e.textContent = F.PRECO; });
   each("[data-parcelas]", function(e){ e.textContent = F.PARCELAS; });
-  each("[data-email]", function(e){ e.textContent = F.EMAIL_SUPORTE; e.href = "mailto:" + F.EMAIL_SUPORTE; });
+  if (F.EMAIL_SUPORTE) { each("[data-email]", function(e){ e.textContent = F.EMAIL_SUPORTE; e.href = "mailto:" + F.EMAIL_SUPORTE; }); } else { each("[data-email-wrap]", function(e){ e.remove(); }); }
 
   // Vídeo (VSL)
   if (F.VIDEO_EMBED) {

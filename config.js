@@ -3,7 +3,7 @@
    ========================================================= */
 window.FUNIL = {
   // Link do checkout (Kiwify, Hotmart, Cakto, Perfect Pay...)
-  CHECKOUT_URL: "https://SEU-CHECKOUT-AQUI.com",
+  CHECKOUT_URL: "https://pay.cakto.com.br/37thzrv_1142951",
 
   // ID do Pixel da Meta (deixe "" para desativar)
   PIXEL_ID: "1439518558047227",
@@ -13,8 +13,8 @@ window.FUNIL = {
   VIDEO_EMBED: "",
 
   PRECO: "37,90",
-  PARCELAS: "5x de R$ 8,50", // confira o valor exato na sua plataforma
-  EMAIL_SUPORTE: "seu-email@exemplo.com"
+  PARCELAS: "5x de R$ 8,63", // valor exibido no checkout da Cakto
+  EMAIL_SUPORTE: "" // preencha com o e-mail de suporte do Cão Educado (vazio = não mostra)
 };
 
 /* ---------- Pixel da Meta ---------- */
