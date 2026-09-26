@@ -123,15 +123,6 @@
   </div>
 </section>
 
-<!-- ============ DEPOIMENTOS ============
-  Aparece sozinha quando houver depoimentos REAIS em config.js (TESTEMUNHOS). -->
-<section class="s" id="provas" hidden>
-  <div class="wrap">
-    <div class="center"><span class="kicker">Resultados reais</span><h2>O que os tutores estão dizendo</h2></div>
-    <div class="depos" id="depoList"></div>
-  </div>
-</section>
-
 <!-- ============ AUTORIDADE ============ -->
 <section class="s">
   <div class="narrow">
@@ -297,22 +288,6 @@
   each("[data-preco]", function(e){ e.textContent = F.PRECO; });
   each("[data-parcelas]", function(e){ e.textContent = F.PARCELAS; });
   each("[data-email]", function(e){ e.textContent = F.EMAIL_SUPORTE; e.href = "mailto:" + F.EMAIL_SUPORTE; });
-
-  // Depoimentos reais (config.js -> TESTEMUNHOS)
-  var T = F.TESTEMUNHOS || [];
-  if (T.length) {
-    document.getElementById("depoList").innerHTML = T.map(function(t){
-      return '<div class="depo reveal">' +
-        '<div class="stars">★★★★★</div>' +
-        (t.video ? '<div class="vid"><iframe src="'+encodeURI(t.video)+'" allowfullscreen title="Depoimento"></iframe></div>' : '') +
-        (t.print ? '<img class="print" src="'+encodeURI(t.print)+'" alt="Mensagem de '+esc(t.nome)+'" loading="lazy">' : '') +
-        (t.texto ? '<p>"'+esc(t.texto)+'"</p>' : '') +
-        '<div class="who">' + (t.foto ? '<img src="'+encodeURI(t.foto)+'" alt="">' : '') +
-          '<div><b>'+esc(t.nome)+'</b><small>'+esc([t.cachorro ? 'tutor(a) de '+t.cachorro : '', t.cidade||''].filter(Boolean).join(' · '))+'</small></div></div>' +
-      '</div>';
-    }).join("");
-    document.getElementById("provas").hidden = false;
-  }
 
   // Vídeo (VSL)
   if (F.VIDEO_EMBED) {

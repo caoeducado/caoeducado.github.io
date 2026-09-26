@@ -12,14 +12,6 @@ window.FUNIL = {
   // Ex.: "https://www.youtube.com/embed/XXXXXXXX"
   VIDEO_EMBED: "",
 
-  // DEPOIMENTOS REAIS (com autorização por escrito). A seção só aparece quando houver pelo menos 1.
-  // Todos os campos são opcionais, exceto "nome". Coloque as imagens na mesma pasta do site.
-  // Exemplo:
-  // { nome: "Ana", cidade: "Campinas/SP", cachorro: "Mel", texto: "Em 2 semanas a Mel parou de...",
-  //   foto: "ana.jpg", print: "print-ana.jpg", video: "https://www.youtube.com/embed/XXXX" },
-  TESTEMUNHOS: [
-  ],
-
   PRECO: "37,90",
   PARCELAS: "5x de R$ 8,50", // confira o valor exato na sua plataforma
   EMAIL_SUPORTE: "seu-email@exemplo.com"
