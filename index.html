@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Teste: Por que seu cachorro não obedece?</title>
+<meta name="description" content="Responda 10 perguntas rápidas e descubra o perfil do seu cachorro e o plano certo para ele.">
+<meta property="og:title" content="Por que seu cachorro não te obedece? Faça o teste de 1 minuto">
+<meta property="og:description" content="Descubra o perfil do seu cachorro e o plano certo para ele.">
+<meta property="og:image" content="capa.jpg">
+<meta name="theme-color" content="#16505f">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🐶%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,800&family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script src="config.js"></script>
+</head>
+<body class="quiz-body">
+
+<div class="qhead">
+  <button class="qback" id="back" type="button">← Voltar</button>
+  <span class="brand">
+    <svg width="26" height="26" viewBox="0 0 100 100" aria-hidden="true"><g fill="#f0a13c"><ellipse cx="50" cy="66" rx="21" ry="18"/><ellipse cx="25" cy="42" rx="9" ry="12" transform="rotate(-20 25 42)"/><ellipse cx="42" cy="28" rx="9" ry="12.5"/><ellipse cx="60" cy="28" rx="9" ry="12.5"/><ellipse cx="76" cy="42" rx="9" ry="12" transform="rotate(20 76 42)"/></g></svg>
+    Cão Educado
+  </span>
+  <span style="width:64px"></span>
+</div>
+<div class="progress" id="progWrap" style="visibility:hidden"><i id="prog"></i></div>
+
+<main class="qmain" id="quiz"></main>
+<div class="qfoot">Suas respostas ficam só no seu navegador e servem apenas para montar o resultado.</div>
+
+<script>
+(function(){
+  var A = { problemas: [], tentou: [], impacto: [] };
+  var nome = function(){ return (A.nome || "seu cachorro").trim(); };
+  var N = function(){ return A.nome ? A.nome.trim() : "ele"; };
+
+  // ---------- Etapas ----------
+  var steps = [
+    { id:"intro", render:function(){ return '' +
+      '<div class="hero-quiz">' +
+        '<div class="hero-dog">🐶</div>' +
+        '<span class="kicker">Teste gratuito · 1 minuto</span>' +
+        '<h1>Descubra por que seu cachorro <span class="hl">não te obedece</span>, e qual é o plano certo para ele</h1>' +
+        '<ul class="checks"><li>10 perguntas rápidas</li><li>Resultado com o perfil do seu cachorro</li><li>O que fazer (e o que evitar) a partir de hoje</li></ul>' +
+        '<button class="btn block pulse" data-go>COMEÇAR O TESTE →</button>' +
+        '<div class="trust"><span>✔ Gratuito</span><span>✔ Sem cadastro</span></div>' +
+      '</div>'; }, onEnter:function(){ fbq('trackCustom','QuizStart'); } },
+
+    { id:"nome", q:true, render:function(){ return '' +
+      '<h2>Qual é o nome do seu cachorro?</h2><p class="sub">Vamos usar o nome dele para personalizar o resultado.</p>' +
+      '<input class="input" id="inNome" maxlength="24" placeholder="Ex.: Thor, Mel, Pipoca..." autocomplete="off" value="'+esc(A.nome||"")+'">' +
+      '<button class="btn block next" id="okNome" '+(A.nome?'':'disabled')+'>CONTINUAR →</button>'; },
+      bind:function(){
+        var i=$("#inNome"), b=$("#okNome");
+        i.focus();
+        i.addEventListener("input",function(){ b.disabled = !i.value.trim(); });
+        i.addEventListener("keydown",function(e){ if(e.key==="Enter" && i.value.trim()){ b.click(); }});
+        b.addEventListener("click",function(){ A.nome = i.value.trim().slice(0,24); go(1); });
+      } },
+
+    single("idade", function(){ return "Qual a idade do "+N()+"?"; }, "", [
+      ["filhote","🐾","Filhote (até 6 meses)"],["jovem","🐕","Jovem (6 meses a 2 anos)"],
+      ["adulto","🦮","Adulto (2 a 7 anos)"],["idoso","🐶","Idoso (mais de 7 anos)"] ]),
+
+    single("porte", function(){ return "Qual o porte do "+N()+"?"; }, "", [
+      ["pequeno","🐩","Pequeno"],["medio","🐕","Médio"],["grande","🐕‍🦺","Grande"] ], true),
+
+    multi("problemas", function(){ return "O que o "+N()+" faz que mais te incomoda hoje?"; }, "Pode marcar mais de uma opção.", [
+      ["xixi","💧","Faz xixi ou cocô fora do lugar"],["late","🔊","Late demais"],["guia","🦮","Puxa a guia no passeio"],
+      ["pula","🦘","Pula nas pessoas"],["morde","🦷","Morde ou destrói coisas"],["sozinho","😢","Chora ou late quando fica sozinho"],
+      ["vem","🙉","Não atende quando eu chamo"] ]),
+
+    single("tempo", function(){ return "Há quanto tempo isso acontece?"; }, "", [
+      ["1","📅","Menos de 1 mês"],["2","🗓️","De 1 a 6 meses"],["3","⏳","Mais de 6 meses"],["4","♾️","Desde sempre"] ]),
+
+    multi("tentou", function(){ return "O que você já tentou para resolver?"; }, "Pode marcar mais de uma opção.", [
+      ["bronca","😠","Brigar ou dar bronca"],["videos","📱","Vídeos no YouTube e Instagram"],["adestrador","🧑‍🏫","Adestrador"],
+      ["produtos","🧴","Produtos (spray, tapete, coleira)"],["nada","🤷","Nada ainda"] ]),
+
+    multi("impacto", function(){ return "Como isso afeta a sua vida?"; }, "Pode marcar mais de uma opção.", [
+      ["vizinhos","🏢","Vizinhos ou condomínio reclamam"],["visitas","😳","Tenho vergonha quando recebo visitas"],
+      ["brigas","💬","Discussões em casa por causa dele"],["sair","🚪","Fico com culpa ou medo de sair e deixar ele sozinho"],
+      ["cansaco","😮‍💨","Me sinto cansado(a) e sem saber o que fazer"] ]),
+
+    single("disp", function(){ return "Quanto tempo por dia você tem para o "+N()+"?"; }, "", [
+      ["10","⏱️","Menos de 10 minutos"],["20","🕒","De 10 a 20 minutos"],["30","🕕","Mais de 20 minutos"] ]),
+
+    { id:"fato", render:function(){ return '' +
+      '<div class="fact"><div class="big">💡</div><h2>Boa notícia: 10 minutos por dia são suficientes</h2>' +
+      '<p>Cães aprendem melhor em <b>sessões curtas de 3 a 5 minutos</b>. Treinos longos cansam e confundem. Ou seja: você <b>não precisa</b> de horas livres para educar o '+esc(N())+'.</p>' +
+      '<button class="btn block next" data-go>ENTENDI, CONTINUAR →</button></div>'; } },
+
+    single("objetivo", function(){ return "Qual é o seu maior objetivo com o "+N()+"?"; }, "", [
+      ["paz","🏠","Ter paz em casa"],["passeio","🌳","Passear com tranquilidade"],["visitas","🎉","Receber visitas sem estresse"],
+      ["sozinho","🛋️","Deixar ele sozinho sem culpa"],["tudo","⭐","Tudo isso!"] ]),
+
+    single("compromisso", function(){ return "Se você tivesse um plano simples, de 10 minutos por dia, aplicaria com o "+N()+" pelos próximos 21 dias?"; }, "", [
+      ["sim","💪","Sim, com certeza!"],["tentar","🙂","Sim, quero tentar"] ]),
+
+    { id:"loading", render:function(){ return '' +
+      '<div class="loader"><div class="ring"><svg width="120" height="120"><circle cx="60" cy="60" r="52" stroke="#eadfcd" stroke-width="10" fill="none"/><circle id="arc" cx="60" cy="60" r="52" stroke="#f0a13c" stroke-width="10" fill="none" stroke-linecap="round" stroke-dasharray="327" stroke-dashoffset="327"/></svg><b id="pct">0%</b></div>' +
+      '<h2>Analisando o perfil do '+esc(N())+'...</h2>' +
+      '<ul class="lsteps"><li>Idade e porte</li><li>Comportamentos principais</li><li>Histórico e tentativas</li><li>Rotina disponível</li><li>Montando o plano personalizado</li></ul></div>'; },
+      bind:function(){
+        var t=0, lis=document.querySelectorAll(".lsteps li"), arc=$("#arc"), pct=$("#pct");
+        var iv=setInterval(function(){
+          t+=2; if(t>100)t=100;
+          pct.textContent=t+"%"; arc.setAttribute("stroke-dashoffset", 327-327*t/100);
+          lis.forEach(function(li,i){ if(t>=(i+1)*19) li.classList.add("done"); });
+          if(t>=100){ clearInterval(iv); setTimeout(function(){ go(1); },450); }
+        },110);
+      } },
+
+    { id:"resultado", render:function(){ return resultHTML(); },
+      onEnter:function(){ FUNIL.save(A); fbq('track','Lead'); },
+      bind:function(){ $("#toOffer").addEventListener("click",function(){ FUNIL.save(A); location.href = FUNIL.withParams("oferta.html"); }); } }
+  ];
+
+  // ---------- Perfis ----------
+  var PERFIS = {
+    explorador:{ emo:"🐾", nome:"Cão Explorador",
+      diag:"O {N} ainda não entendeu as regras da casa. Não é teimosia: ele explora o mundo com o nariz e a boca e ninguém mostrou, de um jeito que ele entenda, onde é o lugar certo de cada coisa.",
+      naoFaca:"Brigar depois que ele já fez (ou esfregar o focinho no xixi). Ele não liga a bronca ao que fez e passa a fazer escondido." },
+    alerta:{ emo:"🔔", nome:"Cão Alerta",
+      diag:"O {N} vive em estado de alerta. Qualquer barulho ou ausência sua vira motivo para latir ou chorar. Ele não está te desafiando: ele não sabe se acalmar sozinho.",
+      naoFaca:"Gritar \"para!\" quando ele late. Para ele, você está latindo junto, e isso deixa tudo mais agitado." },
+    energetico:{ emo:"⚡", nome:"Cão Energético",
+      diag:"O {N} tem energia de sobra e ninguém ensinou para onde canalizar. Por isso ele puxa, pula e ignora o chamado: tudo lá fora parece mais interessante que você.",
+      naoFaca:"Puxar a guia de volta ou chamar o {N} para dar bronca. Isso ensina que chegar perto de você é ruim." },
+    confuso:{ emo:"🌀", nome:"Cão Confuso",
+      diag:"O {N} recebe sinais misturados: às vezes pode, às vezes não pode, cada pessoa fala de um jeito. Por isso ele apresenta vários comportamentos ao mesmo tempo: ele simplesmente não sabe o que você espera dele.",
+      naoFaca:"Tentar resolver tudo de uma vez, cada dia de um jeito. O que ele precisa é de clareza e de uma sequência simples." }
+  };
+  function perfil(){
+    var p=A.problemas, g={explorador:0,alerta:0,energetico:0};
+    p.forEach(function(x){
+      if(x==="xixi"||x==="morde") g.explorador++;
+      if(x==="late"||x==="sozinho") g.alerta++;
+      if(x==="guia"||x==="pula"||x==="vem") g.energetico++;
+    });
+    if(p.length>=4) return "confuso";
+    if(A.idade==="filhote" && (p.indexOf("xixi")>-1||p.indexOf("morde")>-1)) return "explorador";
+    var best="explorador"; Object.keys(g).forEach(function(k){ if(g[k]>g[best]) best=k; });
+    return best;
+  }
+  function urgencia(){
+    var s = Number(A.tempo||1) + A.impacto.length + (A.problemas.length>2?1:0) + (A.tentou.indexOf("nada")>-1?0:1);
+    return Math.max(2, Math.min(5, Math.round(s/1.8)));
+  }
+  function resultHTML(){
+    var k=perfil(), P=PERFIS[k], u=urgencia(), n=esc(N());
+    A.perfil=k;
+    var meter=""; for(var i=1;i<=5;i++) meter+='<i class="'+(i<=u?'on':'')+'"></i>';
+    var labels=["","","Moderado","Moderado","Alto","Muito alto"];
+    return '' +
+      '<div class="result-badge"><div class="emo">'+P.emo+'</div><small>O perfil do '+n+' é</small><h2>'+P.nome+'</h2></div>' +
+      '<div class="panel"><h3>O que está acontecendo</h3><p style="margin:0">'+P.diag.replace(/\{N\}/g,n)+'</p></div>' +
+      '<div class="panel"><h3>Nível de atenção: '+labels[u]+'</h3><div class="meter">'+meter+'</div><p class="sub" style="margin:0;font-size:14px">Quanto antes você começar, mais fácil é mudar o hábito.</p></div>' +
+      '<div class="panel bad"><h3>❌ O que NÃO fazer</h3><p style="margin:0">'+P.naoFaca.replace(/\{N\}/g,n)+'</p></div>' +
+      '<div class="panel good"><h3>✅ A boa notícia</h3><p style="margin:0">Esse perfil responde muito bem ao <b>Protocolo dos 10 Minutos</b>: sessões curtas, com reforço positivo, sem gritos e sem castigo. Preparamos o <b>Plano de 21 Dias</b> com o passo a passo para o '+n+'.</p></div>' +
+      '<button class="btn block pulse" id="toOffer" style="margin-top:6px">VER O PLANO DO '+n.toUpperCase()+' →</button>';
+  }
+
+  // ---------- Helpers ----------
+  function single(key, title, sub, opts, grid){
+    return { id:key, q:true, render:function(){
+      return '<h2>'+esc(title())+'</h2>'+(sub?'<p class="sub">'+sub+'</p>':'<p class="sub"></p>') +
+        '<div class="opts'+(grid?' grid2':'')+'">'+opts.map(function(o){
+          return '<button class="opt'+(grid?' card':'')+(A[key]===o[0]?' sel':'')+'" data-v="'+o[0]+'"><span class="ic">'+o[1]+'</span>'+o[2]+'</button>'; }).join("")+'</div>'; },
+      bind:function(){ document.querySelectorAll(".opt").forEach(function(b){ b.addEventListener("click",function(){
+        document.querySelectorAll(".opt").forEach(function(x){x.classList.remove("sel");}); b.classList.add("sel");
+        A[key]=b.dataset.v; setTimeout(function(){ go(1); },260); }); }); } };
+  }
+  function multi(key, title, sub, opts){
+    return { id:key, q:true, render:function(){
+      return '<h2>'+esc(title())+'</h2><p class="sub">'+sub+'</p><div class="opts">'+opts.map(function(o){
+        return '<button class="opt multi'+(A[key].indexOf(o[0])>-1?' sel':'')+'" data-v="'+o[0]+'"><span class="ic">'+o[1]+'</span>'+o[2]+'</button>'; }).join("")+'</div>' +
+        '<button class="btn block next" id="okMulti" '+(A[key].length?'':'disabled')+'>CONTINUAR →</button>'; },
+      bind:function(){
+        var ok=$("#okMulti");
+        document.querySelectorAll(".opt").forEach(function(b){ b.addEventListener("click",function(){
+          var v=b.dataset.v, arr=A[key], i=arr.indexOf(v);
+          if(v==="nada"){ arr.length=0; document.querySelectorAll(".opt").forEach(function(x){x.classList.remove("sel");}); }
+          else { var j=arr.indexOf("nada"); if(j>-1){ arr.splice(j,1); var nb=document.querySelector('.opt[data-v="nada"]'); if(nb) nb.classList.remove("sel"); } }
+          if(i>-1 && v!=="nada"){ arr.splice(arr.indexOf(v),1); b.classList.remove("sel"); } else { arr.push(v); b.classList.add("sel"); }
+          ok.disabled = !arr.length; }); });
+        ok.addEventListener("click",function(){ go(1); });
+      } };
+  }
+  function $(s){ return document.querySelector(s); }
+  function esc(s){ return String(s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];}); }
+
+  // ---------- Navegação ----------
+  var cur=0, root=$("#quiz"), back=$("#back"), prog=$("#prog"), progWrap=$("#progWrap");
+  var total = steps.filter(function(s){return s.q;}).length;
+  function show(){
+    var s=steps[cur];
+    root.innerHTML='<div class="step on">'+s.render()+'</div>';
+    var done = steps.slice(0,cur).filter(function(x){return x.q;}).length;
+    progWrap.style.visibility = (cur===0||s.id==="resultado") ? "hidden" : "visible";
+    prog.style.width = Math.round(done/total*100)+"%";
+    back.style.visibility = (cur>0 && s.id!=="loading" && s.id!=="resultado") ? "visible" : "hidden";
+    root.querySelectorAll("[data-go]").forEach(function(b){ b.addEventListener("click",function(){ go(1); }); });
+    if(s.bind) s.bind();
+    if(s.onEnter) s.onEnter();
+    window.scrollTo(0,0);
+  }
+  function go(d){ cur=Math.max(0,Math.min(steps.length-1,cur+d)); show(); }
+  back.addEventListener("click",function(){ go(-1); });
+  show();
+})();
+</script>
+</body>
+</html>
