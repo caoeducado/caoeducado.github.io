@@ -34,7 +34,7 @@
     </div>
 
     <div class="hero-cta">
-      <a class="btn block pulse" data-buy href="#oferta">QUERO O PLANO DO <span data-nome-up>MEU CACHORRO</span><small>por apenas R$ <span data-preco>37,90</span></small></a>
+      <a class="btn block pulse" data-buy href="#oferta">QUERO O PLANO <span data-nome-up>DO MEU CACHORRO</span><small>por apenas R$ <span data-preco>37,90</span></small></a>
       <div class="trust"><span>🔒 Pagamento seguro</span><span>⚡ Acesso imediato</span><span>🛡️ Garantia de 7 dias</span></div>
     </div>
   </div>
@@ -259,22 +259,24 @@
   var F = window.FUNIL, Q = F.load();
   var PROB = {
     xixi:"fazer xixi fora do lugar", late:"latir sem parar", guia:"puxar a guia no passeio",
-    pula:"pular nas pessoas", morde:"morder e destruir as coisas", sozinho:"chorar quando fica sozinho", vem:"ignorar quando você chama"
+    pula:"pular nas pessoas", morde:"morder e destruir as coisas", sozinho:"chorar quando fica sozinh{-o}", vem:"ignorar quando você chama"
   };
   function esc(s){ var d=document.createElement("div"); d.textContent=s; return d.innerHTML; }
   function each(sel, fn){ document.querySelectorAll(sel).forEach(fn); }
 
   // Personalização vinda do quiz
   if (Q.nome) {
+    var f = Q.sexo === "f";
+    var DO = f ? "da " : "do ", O = f ? "A " : "O ", ELE = f ? "ela" : "ele";
     var n = esc(Q.nome);
-    var probs = (Q.problemas||[]).filter(function(p){ return PROB[p]; }).slice(0,2).map(function(p){ return PROB[p]; });
+    var probs = (Q.problemas||[]).filter(function(p){ return PROB[p]; }).slice(0,2).map(function(p){ return PROB[p].replace(/\{-o\}/g, f ? "a" : "o"); });
     var txt = probs.length ? probs.join(" e ") : "fazer bagunça e te desobedecer";
     document.getElementById("headline").innerHTML =
-      'O plano do <span class="hl">'+n+'</span> está pronto: em 21 dias, com 10 minutos por dia, ele vai parar de '+esc(txt);
+      'O plano '+DO+'<span class="hl">'+n+'</span> está pronto: em 21 dias, com 10 minutos por dia, '+ELE+' vai parar de '+esc(txt);
     each("[data-nome]", function(e){ e.textContent = Q.nome; });
-    each("[data-nome-up]", function(e){ e.textContent = Q.nome.toUpperCase(); });
-    each("[data-do-nome]", function(e){ e.textContent = "do " + Q.nome; });
-    each("[data-nome-cap]", function(e){ e.textContent = "O " + Q.nome; });
+    each("[data-nome-up]", function(e){ e.textContent = (DO + Q.nome).toUpperCase(); });
+    each("[data-do-nome]", function(e){ e.textContent = DO + Q.nome; });
+    each("[data-nome-cap]", function(e){ e.textContent = O + Q.nome; });
   }
 
   // Configurações
