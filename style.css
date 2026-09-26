@@ -184,13 +184,32 @@ footer a{color:#cfe3e7}
 .sticky .p{font-weight:900;color:var(--teal-d);line-height:1.1;font-size:15px}
 .sticky .p small{display:block;font-weight:700;color:var(--muted);font-size:12px}
 .sticky .btn{padding:13px 20px;font-size:16px;box-shadow:0 4px 0 var(--amber-d)}
+.authority{background:#fff;border-radius:var(--radius);padding:28px 28px 18px;box-shadow:var(--shadow);border-left:6px solid var(--teal);margin-top:22px;position:relative}
+.authority .ab-icon{width:52px;height:52px;border-radius:14px;background:var(--teal-soft);display:flex;align-items:center;justify-content:center;font-size:28px;margin-bottom:12px}
+.small-src{font-size:13px;color:var(--muted)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
+.stats div{background:var(--teal);color:#d6e8ec;border-radius:16px;padding:18px 12px;text-align:center;font-size:14px;font-weight:700}
+.stats b{display:block;font-family:"Fraunces",Georgia,serif;color:var(--amber);font-size:30px;line-height:1.1;margin-bottom:4px}
+.depos{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:26px}
+.depo{background:#fff;border-radius:var(--radius);padding:22px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:12px}
+.depo .stars{color:var(--amber);letter-spacing:2px}
+.depo p{margin:0;font-style:italic}
+.depo img.print{border-radius:12px;border:1px solid var(--line)}
+.depo .vid{aspect-ratio:9/16;border-radius:12px;overflow:hidden;background:#000}
+.depo .vid iframe{width:100%;height:100%;border:0}
+.depo .who{display:flex;align-items:center;gap:10px;margin-top:auto}
+.depo .who img{width:44px;height:44px;border-radius:50%;object-fit:cover}
+.depo .who b{display:block;color:var(--teal-d);line-height:1.2}
+.depo .who small{color:var(--muted)}
 .reveal{opacity:0;transform:translateY(18px);transition:opacity .6s, transform .6s}
 .reveal.in{opacity:1;transform:none}
 
 @media (max-width:760px){
   body{font-size:16.5px}
   section.s{padding:48px 0}
-  .pillars,.compare,.fit,.bonus{grid-template-columns:1fr}
+  .pillars,.compare,.fit,.bonus,.depos{grid-template-columns:1fr}
+  .stats b{font-size:24px}
+  .stats div{padding:14px 8px;font-size:12.5px}
   .gallery{grid-template-columns:repeat(2,1fr)}
   .guarantee{flex-direction:column;text-align:center}
   .mockup img.b{display:none}

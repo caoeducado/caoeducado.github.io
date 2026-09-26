@@ -12,8 +12,8 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🐶%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,800&family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
-<script src="config.js"></script>
+<link rel="stylesheet" href="style.css?v=3">
+<script src="config.js?v=3"></script>
 </head>
 <body>
 
@@ -124,20 +124,31 @@
 </section>
 
 <!-- ============ DEPOIMENTOS ============
-  Quando tiver depoimentos REAIS (com autorização por escrito), apague esta linha de comentário
-  e a linha de fechamento abaixo, e troque os textos/vídeos. Nunca publique depoimentos inventados.
-
-<section class="s">
+  Aparece sozinha quando houver depoimentos REAIS em config.js (TESTEMUNHOS). -->
+<section class="s" id="provas" hidden>
   <div class="wrap">
     <div class="center"><span class="kicker">Resultados reais</span><h2>O que os tutores estão dizendo</h2></div>
-    <div class="pillars">
-      <div class="pillar"><p>"[texto do depoimento real]"</p><h3>[Nome], tutor(a) do [Cachorro]</h3></div>
-      <div class="pillar"><p>"[texto do depoimento real]"</p><h3>[Nome], tutor(a) do [Cachorro]</h3></div>
-      <div class="pillar"><p>"[texto do depoimento real]"</p><h3>[Nome], tutor(a) do [Cachorro]</h3></div>
+    <div class="depos" id="depoList"></div>
+  </div>
+</section>
+
+<!-- ============ AUTORIDADE ============ -->
+<section class="s">
+  <div class="narrow">
+    <div class="center"><span class="kicker">Por que funciona</span><h2>Um método apoiado pela ciência do comportamento animal</h2></div>
+    <div class="authority reveal">
+      <div class="ab-icon">🩺</div>
+      <p>O Protocolo dos 10 Minutos é baseado em <b>reforço positivo</b>: recompensar o comportamento certo em vez de punir o errado.</p>
+      <p>Essa é a abordagem recomendada pela <b>AVSAB</b> (Sociedade Americana de Veterinários em Comportamento Animal). Em seu posicionamento oficial sobre adestramento, a entidade orienta usar <b>apenas métodos baseados em recompensa</b> e alerta que técnicas de punição podem aumentar o medo, o estresse e até a agressividade dos cães.</p>
+      <p class="small-src">Fonte: AVSAB, Position Statement on Humane Dog Training (2021).</p>
+    </div>
+    <div class="stats">
+      <div class="reveal"><b>10 min</b><span>por dia, em mini-sessões</span></div>
+      <div class="reveal"><b>21 dias</b><span>de plano, dia a dia</span></div>
+      <div class="reveal"><b>0</b><span>gritos, castigos ou coleiras de choque</span></div>
     </div>
   </div>
 </section>
-============ FIM DEPOIMENTOS ============ -->
 
 <!-- ============ PREÇO COMPARADO ============ -->
 <section class="s">
@@ -286,6 +297,22 @@
   each("[data-preco]", function(e){ e.textContent = F.PRECO; });
   each("[data-parcelas]", function(e){ e.textContent = F.PARCELAS; });
   each("[data-email]", function(e){ e.textContent = F.EMAIL_SUPORTE; e.href = "mailto:" + F.EMAIL_SUPORTE; });
+
+  // Depoimentos reais (config.js -> TESTEMUNHOS)
+  var T = F.TESTEMUNHOS || [];
+  if (T.length) {
+    document.getElementById("depoList").innerHTML = T.map(function(t){
+      return '<div class="depo reveal">' +
+        '<div class="stars">★★★★★</div>' +
+        (t.video ? '<div class="vid"><iframe src="'+encodeURI(t.video)+'" allowfullscreen title="Depoimento"></iframe></div>' : '') +
+        (t.print ? '<img class="print" src="'+encodeURI(t.print)+'" alt="Mensagem de '+esc(t.nome)+'" loading="lazy">' : '') +
+        (t.texto ? '<p>"'+esc(t.texto)+'"</p>' : '') +
+        '<div class="who">' + (t.foto ? '<img src="'+encodeURI(t.foto)+'" alt="">' : '') +
+          '<div><b>'+esc(t.nome)+'</b><small>'+esc([t.cachorro ? 'tutor(a) de '+t.cachorro : '', t.cidade||''].filter(Boolean).join(' · '))+'</small></div></div>' +
+      '</div>';
+    }).join("");
+    document.getElementById("provas").hidden = false;
+  }
 
   // Vídeo (VSL)
   if (F.VIDEO_EMBED) {
