@@ -6,7 +6,7 @@ window.FUNIL = {
   CHECKOUT_URL: "https://SEU-CHECKOUT-AQUI.com",
 
   // ID do Pixel da Meta (deixe "" para desativar)
-  PIXEL_ID: "",
+  PIXEL_ID: "1439518558047227",
 
   // Link de incorporação da VSL (YouTube/Vimeo/Panda/Vturb). Deixe "" para mostrar a imagem do produto.
   // Ex.: "https://www.youtube.com/embed/XXXXXXXX"
