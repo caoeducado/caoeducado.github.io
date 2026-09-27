@@ -13,7 +13,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,800&family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css?v=3">
-<script src="config.js?v=5"></script>
+<script src="config.js?v=6"></script>
 </head>
 <body>
 
@@ -295,14 +295,9 @@
       '<iframe src="'+encodeURI(F.VIDEO_EMBED)+'" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen title="Vídeo de apresentação"></iframe>';
   }
 
-  // Botões de compra -> checkout (com UTMs)
-  each("[data-buy]", function(a){
-    a.addEventListener("click", function(e){
-      e.preventDefault();
-      fbq('track', 'InitiateCheckout', { value: parseFloat(F.PRECO.replace(",", ".")), currency: "BRL" });
-      window.location.href = F.withParams(F.CHECKOUT_URL);
-    });
-  });
+  // Botões de compra -> link direto para o checkout (com UTMs).
+  // A Utmify reconhece o clique no link de pagamento e envia o InitiateCheckout.
+  each("[data-buy]", function(a){ a.href = F.withParams(F.CHECKOUT_URL); });
 
   // Barra fixa no celular
   var sticky = document.getElementById("sticky");
@@ -313,8 +308,6 @@
     var io = new IntersectionObserver(function(es){ es.forEach(function(x){ if(x.isIntersecting){ x.target.classList.add("in"); io.unobserve(x.target); } }); }, { threshold:.12 });
     each(".reveal", function(el){ io.observe(el); });
   } else { each(".reveal", function(el){ el.classList.add("in"); }); }
-
-  fbq('track', 'ViewContent');
 })();
 </script>
 </body>

@@ -5,8 +5,9 @@ window.FUNIL = {
   // Link do checkout (Kiwify, Hotmart, Cakto, Perfect Pay...)
   CHECKOUT_URL: "https://pay.cakto.com.br/37thzrv_1142951",
 
-  // ID do Pixel da Meta (deixe "" para desativar)
-  PIXEL_ID: "1439518558047227",
+  // Pixel da Utmify (ele mesmo carrega o Pixel da Meta 1439518558047227 configurado na Utmify
+  // e envia PageView, ViewContent e InitiateCheckout, também pela API de Conversões)
+  UTMIFY_PIXEL_ID: "6ab8f55be1f9dc92edd6428e",
 
   // Link de incorporação da VSL (YouTube/Vimeo/Panda/Vturb). Deixe "" para mostrar a imagem do produto.
   // Ex.: "https://www.youtube.com/embed/XXXXXXXX"
@@ -17,18 +18,28 @@ window.FUNIL = {
   EMAIL_SUPORTE: "" // preencha com o e-mail de suporte do Cão Educado (vazio = não mostra)
 };
 
-/* ---------- Pixel da Meta ---------- */
+/* ---------- Pixel da Utmify (equivale ao código gerado no painel da Utmify) ---------- */
 (function () {
-  var id = window.FUNIL.PIXEL_ID;
-  if (!id) { window.fbq = function () {}; return; }
-  !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-  n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
-  n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
-  t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
-  document,'script','https://connect.facebook.net/en_US/fbevents.js');
-  fbq('init', id);
-  fbq('track', 'PageView');
+  var id = window.FUNIL.UTMIFY_PIXEL_ID;
+  if (!id) return;
+  window.pixelId = id;
+  var s = document.createElement("script");
+  s.src = "https://cdn.utmify.com.br/scripts/pixel/pixel.js";
+  s.async = true; s.defer = true;
+  (document.head || document.documentElement).appendChild(s);
 })();
+
+/* ---------- Eventos extras do quiz (QuizStart, Lead) ----------
+   Espera a Utmify carregar o Pixel da Meta e só então envia, para não perder nem duplicar. */
+window.FUNIL.track = function (method, name, data) {
+  var tries = 0;
+  (function send() {
+    var f = window.fbq;
+    var ready = f && f.getState && f.getState().pixels && f.getState().pixels.length;
+    if (ready) { f(method, name, data || {}); return; }
+    if (++tries < 60) setTimeout(send, 500); // tenta por até 30 s
+  })();
+};
 
 /* ---------- Repassa só os parâmetros de rastreamento (UTMs etc.) ---------- */
 window.FUNIL.withParams = function (url) {
