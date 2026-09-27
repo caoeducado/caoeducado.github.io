@@ -13,7 +13,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,800&family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css?v=3">
-<script src="config.js?v=6"></script>
+<script src="config.js?v=7"></script>
 </head>
 <body class="quiz-body">
 
@@ -208,6 +208,7 @@
   // ---------- Navegação ----------
   var cur=0, root=$("#quiz"), back=$("#back"), prog=$("#prog"), progWrap=$("#progWrap");
   var total = steps.filter(function(s){return s.q;}).length;
+  var seen = {};
   function show(){
     var s=steps[cur];
     root.innerHTML='<div class="step on">'+s.render()+'</div>';
@@ -218,6 +219,8 @@
     root.querySelectorAll("[data-go]").forEach(function(b){ b.addEventListener("click",function(){ go(1); }); });
     if(s.bind) s.bind();
     if(s.onEnter) s.onEnter();
+    // Rastreamento por etapa (uma vez por etapa): mostra no Gerenciador de Eventos onde as pessoas param
+    if(!seen[s.id]){ seen[s.id]=1; FUNIL.track('trackCustom', 'Quiz_' + (cur<10?'0':'') + cur + '_' + s.id, { etapa: cur, id: s.id }); }
     window.scrollTo(0,0);
   }
   function go(d){ cur=Math.max(0,Math.min(steps.length-1,cur+d)); show(); }

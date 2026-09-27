@@ -13,7 +13,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,800&family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css?v=3">
-<script src="config.js?v=6"></script>
+<script src="config.js?v=7"></script>
 </head>
 <body>
 
@@ -297,7 +297,36 @@
 
   // Botões de compra -> link direto para o checkout (com UTMs).
   // A Utmify reconhece o clique no link de pagamento e envia o InitiateCheckout.
-  each("[data-buy]", function(a){ a.href = F.withParams(F.CHECKOUT_URL); });
+  each("[data-buy]", function(a){
+    a.href = F.withParams(F.CHECKOUT_URL);
+    a.addEventListener("click", function(e){
+      // registra o clique antes de sair da página
+      var f = window.fbq, ready = f && f.getState && f.getState().pixels.length;
+      if (ready) {
+        e.preventDefault();
+        f('trackCustom', 'Oferta_4_Clicou_Comprar');
+        var href = a.href; setTimeout(function(){ location.href = href; }, 350);
+      }
+    });
+  });
+
+  // ---------- Rastreamento da página de vendas (onde as pessoas param) ----------
+  var sent = {};
+  function once(name){ if (!sent[name]) { sent[name] = 1; F.track('trackCustom', name); } }
+  once('Oferta_0_Chegou');
+  each('a[href="#oferta"]', function(a){ a.addEventListener("click", function(){ once('Oferta_1_Clicou_Ver_Plano'); }); });
+  window.addEventListener("scroll", function(){
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    var p = h > 0 ? window.scrollY / h : 1;
+    if (p >= 0.25) once('Oferta_Rolou_25');
+    if (p >= 0.50) once('Oferta_Rolou_50');
+    if (p >= 0.75) once('Oferta_Rolou_75');
+    if (p >= 0.95) once('Oferta_Rolou_100');
+  }, { passive:true });
+  if ("IntersectionObserver" in window) {
+    var priceBox = document.querySelector("#oferta .price");
+    if (priceBox) new IntersectionObserver(function(es, ob){ es.forEach(function(x){ if (x.isIntersecting){ once('Oferta_2_Viu_Preco'); ob.disconnect(); } }); }, { threshold:.5 }).observe(priceBox);
+  }
 
   // Barra fixa no celular
   var sticky = document.getElementById("sticky");
