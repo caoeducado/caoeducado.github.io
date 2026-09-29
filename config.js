@@ -1,4 +1,4 @@
-/* =========================================================
+﻿/* =========================================================
    CONFIGURAÇÃO DO FUNIL — edite só este arquivo
    ========================================================= */
 window.FUNIL = {
@@ -13,8 +13,8 @@ window.FUNIL = {
   // Ex.: "https://www.youtube.com/embed/XXXXXXXX"
   VIDEO_EMBED: "",
 
-  PRECO: "37,90",
-  PARCELAS: "5x de R$ 8,63", // valor exibido no checkout da Cakto
+  PRECO: "27,90",
+  PARCELAS: "até 5x no cartão", // troque pelo valor exato que a Cakto mostrar (ex.: "5x de R$ 6,35")
   EMAIL_SUPORTE: "" // preencha com o e-mail de suporte do Cão Educado (vazio = não mostra)
 };
 
